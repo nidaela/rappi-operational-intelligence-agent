@@ -1,0 +1,112 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam packageStyle rectangle
+
+skinparam component {
+  BackgroundColor #F8F8F8
+  BorderColor #555555
+  FontColor #222222
+}
+
+skinparam package {
+  BackgroundColor #FCFCFC
+  BorderColor #888888
+  FontColor #222222
+}
+
+skinparam database {
+  BackgroundColor #FFF8DC
+  BorderColor #777777
+}
+
+title Rappi Operational Intelligence Agent - System Flow
+
+actor "KAM / Reviewer" as User
+
+package "Frontend" {
+  [Streamlit App] as FE
+  [Language Selector\nEN / ES / PT] as LANG
+  [KAM Filter] as FILTER
+  [Restaurant Drill-down] as DRILL
+  [Alerts Dashboard] as DASH
+}
+
+package "Backend Agent Logic" {
+  [App Controller] as APP
+  [Auto-Recovery Logic\nif CSV is missing] as RECOVERY
+  [Load Data] as LOAD
+  [Clean Data] as CLEAN
+  [Score Risk] as SCORE
+  [Classify Severity] as CLASSIFY
+  [Generate Drivers] as DRIVERS
+  [Generate Recommended Actions] as ACTIONS
+}
+
+package "Data Layer" {
+  database "Challenge Excel\nCaso2_Restaurantes" as EXCEL
+  database "Enriched Output CSV" as CSV
+}
+
+package "Core Logic" {
+  [Heuristic Rules Engine] as RULES
+  [Risk Thresholds\nStable / At Risk / Critical] as THRESHOLDS
+  [Severity Overrides] as OVERRIDES
+}
+
+package "Deployment" {
+  [GitHub Repository] as GITHUB
+  [Streamlit Cloud] as CLOUD
+}
+
+package "Outputs" {
+  [Prioritized Alerts] as ALERTS
+  [Risk Drivers] as OUT_DRIVERS
+  [Recommended Actions] as OUT_ACTIONS
+  [Live Demo Interface] as LIVE
+}
+
+User --> FE
+FE --> LANG
+FE --> FILTER
+FE --> DRILL
+FE --> DASH
+
+FE --> APP
+
+APP --> CSV : load if exists
+APP --> RECOVERY : fallback if missing
+
+RECOVERY --> LOAD
+LOAD --> EXCEL
+LOAD --> CLEAN
+CLEAN --> SCORE
+
+SCORE --> RULES
+RULES --> THRESHOLDS
+RULES --> OVERRIDES
+
+SCORE --> CLASSIFY
+CLASSIFY --> DRIVERS
+CLASSIFY --> ACTIONS
+
+ACTIONS --> CSV : export enriched dataset
+CSV --> APP : reload enriched data
+
+APP --> ALERTS
+APP --> OUT_DRIVERS
+APP --> OUT_ACTIONS
+APP --> LIVE
+
+GITHUB --> CLOUD
+CLOUD --> FE
+
+DASH --> ALERTS
+DRILL --> OUT_DRIVERS
+DRILL --> OUT_ACTIONS
+
+@enduml
