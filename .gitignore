@@ -2,5 +2,6 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
-data/output/
+data/output/*
+!data/output/enriched_restaurants_output.csv
 .streamlit/
