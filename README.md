@@ -37,6 +37,14 @@ In other words, it automates the path from signal detection -> decision -> alert
 
 The Streamlit app is the chosen delivery channel for this MVP, but the underlying value comes from the decision pipeline behind it. That pipeline is what makes this an agent-oriented solution rather than a passive reporting interface.
 
+## System Flow Diagram
+
+The following diagram summarizes the architecture and operational flow of the MVP, including the frontend, backend agent logic, data layer, outputs, and deployment path.
+
+![Rappi Operational Intelligence Agent - System Flow](assets/rappi-agent-system-flow.png)
+
+PlantUML source: `assets/rappi-agent-system-flow.puml`
+
 ## Tooling Decisions
 The implementation was intentionally designed to balance speed, clarity, deployability, and explainability.
 
